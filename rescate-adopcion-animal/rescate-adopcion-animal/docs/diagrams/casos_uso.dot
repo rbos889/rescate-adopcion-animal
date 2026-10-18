@@ -1,0 +1,76 @@
+digraph CasosUso {
+  rankdir=LR;
+  nodesep=0.3; ranksep=1.3; splines=true;
+  fontname="Helvetica";
+  node [fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=9, dir=none, color="#555555"];
+
+  // ---------- Actores ----------
+  node [shape=box, style="rounded,filled", fillcolor="#FFE9A8", color="#8a6d00"];
+  Rescatista    [label="«actor»\nRescatista"];
+  Voluntario    [label="«actor»\nVoluntario"];
+  Veterinario   [label="«actor»\nVeterinario"];
+  Adoptante     [label="«actor»\nAdoptante"];
+  Administrador [label="«actor»\nAdministrador\ndel refugio"];
+  Notificaciones [label="«actor secundario»\nServicio de correo / SMS", fillcolor="#E3E3E3", color="#666666"];
+
+  {rank=same; Rescatista; Voluntario; Veterinario;}
+  {rank=same; Adoptante; Administrador; Notificaciones;}
+
+  // ---------- Sistema ----------
+  subgraph cluster_sistema {
+    label="Sistema de Control de Rescate y Adopción Animal";
+    labeljust=c; fontsize=13; style="rounded"; color="#3b5b92";
+    node [shape=ellipse, style=filled, fillcolor="#DCE8FA", color="#3b5b92"];
+
+    CU01 [label="CU01\nRegistrar rescate"];
+    CU02 [label="CU02\nRegistrar ficha\ndel animal"];
+    CU03 [label="CU03\nRegistrar evaluación\nveterinaria"];
+    CU04 [label="CU04\nRegistrar tratamiento\no vacuna"];
+    CU05 [label="CU05\nActualizar estado\ndel animal"];
+    CU06 [label="CU06\nConsultar animales\ndisponibles"];
+    CU07 [label="CU07\nRegistrar adoptante"];
+    CU08 [label="CU08\nSolicitar adopción"];
+    CU09 [label="CU09\nEvaluar solicitud\nde adopción"];
+    CU10 [label="CU10\nFormalizar adopción"];
+    CU11 [label="CU11\nSeguimiento\npost-adopción"];
+    CU12 [label="CU12\nGenerar reportes"];
+    CU13 [label="CU13\nGestionar usuarios\ny roles"];
+    CU14 [label="CU14\nAutenticarse"];
+    CU15 [label="CU15\nEnviar notificación"];
+
+    nota [shape=note, style=filled, fillcolor="#FFFFFF", color="#888888", fontsize=9,
+          label="Todos los casos de uso\n(excepto CU06) incluyen CU14"];
+  }
+
+  // ---------- Asociaciones actor - caso de uso ----------
+  Rescatista -> CU01;
+  Voluntario -> CU01;
+  Voluntario -> CU02;
+  Voluntario -> CU11;
+  Veterinario -> CU03;
+  Veterinario -> CU04;
+  Veterinario -> CU05;
+
+  CU06 -> Adoptante;
+  CU07 -> Adoptante;
+  CU08 -> Adoptante;
+  CU11 -> Adoptante;
+  CU05 -> Administrador;
+  CU09 -> Administrador;
+  CU10 -> Administrador;
+  CU12 -> Administrador;
+  CU13 -> Administrador;
+  CU15 -> Notificaciones;
+
+  // ---------- include / extend ----------
+  edge [dir=forward, style=dashed, arrowhead=vee, color="#3b5b92", fontcolor="#3b5b92"];
+  CU01 -> CU02 [label="«include»"];
+  CU08 -> CU07 [label="«include»"];
+  CU10 -> CU09 [label="«include»"];
+  CU09 -> CU15 [label="«include»"];
+  CU10 -> CU15 [label="«include»"];
+  CU13 -> CU14 [label="«include»"];
+  CU04 -> CU03 [label="«extend»"];
+  CU14 -> nota [style=dotted, arrowhead=none, color="#888888"];
+}

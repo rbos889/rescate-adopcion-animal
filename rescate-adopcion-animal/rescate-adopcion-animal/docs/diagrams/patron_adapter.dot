@@ -1,0 +1,18 @@
+digraph Adapter {
+  rankdir=BT; nodesep=0.5; ranksep=0.8;
+  node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#FFFFFF", color="#3b5b92"];
+  edge [fontname="Helvetica", fontsize=9, color="#444444"];
+
+  Cliente [label="{NotificadorAdoptante (Client)|- notificador: Notificador\l|+ actualizar(evento)\l}"];
+  Notificador [fillcolor="#EEF3FB", label="{«interface»\nNotificador (Target)|+ enviar(destino, asunto, mensaje): bool\l}"];
+  AdapterEmail [label="{NotificadorEmailAdapter (Adapter)|- servicio: ServicioCorreoExterno\l|+ enviar(destino, asunto, mensaje): bool\l}"];
+  AdapterSms [label="{NotificadorSmsAdapter (Adapter)|- api: ApiSmsExterna\l|+ enviar(destino, asunto, mensaje): bool\l}"];
+  Correo [fillcolor="#E3E3E3", color="#666666", label="{ServicioCorreoExterno (Adaptee)|+ sendMail(to, subject, body): int\l}"];
+  Sms [fillcolor="#E3E3E3", color="#666666", label="{ApiSmsExterna (Adaptee)|+ enviarSms(numero, texto): String\l}"];
+
+  Cliente -> Notificador [arrowhead=vee, label="usa"];
+  AdapterEmail -> Notificador [arrowhead=empty, style=dashed];
+  AdapterSms -> Notificador [arrowhead=empty, style=dashed];
+  AdapterEmail -> Correo [arrowhead=vee, label="adapta"];
+  AdapterSms -> Sms [arrowhead=vee, label="adapta"];
+}

@@ -1,0 +1,18 @@
+digraph Observer {
+  rankdir=BT; nodesep=0.5; ranksep=0.8;
+  node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#FFFFFF", color="#3b5b92"];
+  edge [fontname="Helvetica", fontsize=9, color="#444444"];
+
+  Solicitud [label="{SolicitudAdopcion (Subject)|- estado: EstadoSolicitud\l- observadores: List\<ObservadorAdopcion\>\l|+ suscribir(o: ObservadorAdopcion)\l+ desuscribir(o: ObservadorAdopcion)\l+ aprobar(): void\l+ rechazar(motivo): void\l- notificar(evento): void\l}"];
+  Observador [fillcolor="#EEF3FB", label="{«interface»\nObservadorAdopcion (Observer)|+ actualizar(evento: EventoAdopcion): void\l}"];
+  Actualizador [label="{ActualizadorEstadoAnimal|+ actualizar(evento)\l}"];
+  NotifAdoptante [label="{NotificadorAdoptante|- notificador: Notificador\l|+ actualizar(evento)\l}"];
+  Auditoria [label="{RegistroAuditoria|- eventos: List\l|+ actualizar(evento)\l}"];
+  Evento [fillcolor="#FFF4D6", color="#8a6d00", label="{EventoAdopcion|+ solicitud\l+ estado_anterior\l+ estado_nuevo\l}"];
+
+  Actualizador -> Observador [arrowhead=empty, style=dashed];
+  NotifAdoptante -> Observador [arrowhead=empty, style=dashed];
+  Auditoria -> Observador [arrowhead=empty, style=dashed];
+  Solicitud -> Observador [arrowhead=vee, taillabel="1", headlabel="0..*", label="notifica a"];
+  Solicitud -> Evento [style=dashed, arrowhead=vee, label="emite"];
+}

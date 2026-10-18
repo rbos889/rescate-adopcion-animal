@@ -1,0 +1,20 @@
+digraph Factory {
+  rankdir=BT; nodesep=0.5; ranksep=0.7;
+  node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#FFFFFF", color="#3b5b92"];
+  edge [fontname="Helvetica", fontsize=9, color="#444444"];
+
+  AnimalFactory [fillcolor="#EEF3FB", label="{«abstract»\nAnimalFactory (Creator)|+ registrar_animal(datos): Animal\l# crear_animal(datos): Animal\l# validar(datos): void\l}"];
+  PerroFactory [label="{PerroFactory|# crear_animal(datos): Perro\l}"];
+  GatoFactory [label="{GatoFactory|# crear_animal(datos): Gato\l}"];
+  Animal [fillcolor="#EEF3FB", label="{«abstract»\nAnimal (Product)|+ cambiar_estado(e)\l+ ficha(): String\l}"];
+  Perro [label="{Perro (ConcreteProduct)|- tamano\l- nivel_energia\l}"];
+  Gato [label="{Gato (ConcreteProduct)|- esterilizado\l- convive_con_otros\l}"];
+
+  PerroFactory -> AnimalFactory [arrowhead=empty];
+  GatoFactory -> AnimalFactory [arrowhead=empty];
+  Perro -> Animal [arrowhead=empty];
+  Gato -> Animal [arrowhead=empty];
+  AnimalFactory -> Animal [style=dashed, arrowhead=vee, label="crea"];
+  PerroFactory -> Perro [style=dashed, arrowhead=vee, label="instancia"];
+  GatoFactory -> Gato [style=dashed, arrowhead=vee, label="instancia"];
+}

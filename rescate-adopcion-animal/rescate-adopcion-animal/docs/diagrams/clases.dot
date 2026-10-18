@@ -1,0 +1,54 @@
+digraph Clases {
+  rankdir=TB;
+  nodesep=0.35; ranksep=0.8; splines=true; newrank=true;
+  fontname="Helvetica";
+  node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#FFFFFF", color="#3b5b92"];
+  edge [fontname="Helvetica", fontsize=9, color="#444444"];
+
+  // ---------- Personas ----------
+  Persona [fillcolor="#EEF3FB", label="{«abstract»\nPersona|- id: int\l- nombre: String\l- cedula: String\l- telefono: String\l- correo: String\l|+ obtenerPerfil(): String\l}"];
+  Rescatista [label="{Rescatista|- zonaOperacion: String\l|+ reportarRescate(): Rescate\l}"];
+  Voluntario [label="{Voluntario|- disponibilidad: String\l|+ registrarSeguimiento(): Seguimiento\l}"];
+  Veterinario [label="{Veterinario|- nroRegistroProf: String\l|+ evaluarAnimal(a: Animal): FichaMedica\l+ registrarTratamiento(t: Tratamiento)\l}"];
+  Adoptante [label="{Adoptante|- direccion: String\l- tipoVivienda: String\l- experienciaMascotas: boolean\l|+ solicitarAdopcion(a: Animal): SolicitudAdopcion\l}"];
+  Administrador [label="{Administrador|- cargo: String\l|+ evaluarSolicitud(s: SolicitudAdopcion)\l+ generarReporte(): Reporte\l}"];
+
+  Persona -> Rescatista [dir=back, arrowtail=empty];
+  Persona -> Voluntario [dir=back, arrowtail=empty];
+  Persona -> Veterinario [dir=back, arrowtail=empty];
+  Persona -> Adoptante [dir=back, arrowtail=empty];
+  Persona -> Administrador [dir=back, arrowtail=empty];
+
+  {rank=same; Rescatista; Voluntario; Veterinario; Adoptante; Administrador;}
+  // ---------- Animales ----------
+  Animal [fillcolor="#EEF3FB", label="{«abstract»\nAnimal|- id: int\l- nombre: String\l- raza: String\l- edadAprox: int\l- sexo: String\l- estado: EstadoAnimal\l- fechaIngreso: Date\l|+ cambiarEstado(e: EstadoAnimal)\l+ obtenerFicha(): String\l}"];
+  Perro [label="{Perro|- tamano: String\l- nivelEnergia: int\l|+ requiereEjercicio(): boolean\l}"];
+  Gato [label="{Gato|- esterilizado: boolean\l- conviveConOtros: boolean\l|+ necesitaRascador(): boolean\l}"];
+  EstadoAnimal [fillcolor="#FFF4D6", color="#8a6d00", label="{«enumeration»\nEstadoAnimal|EN_RESCATE\lEN_TRATAMIENTO\lDISPONIBLE\lEN_PROCESO_ADOPCION\lADOPTADO\l}"];
+
+  Animal -> Perro [dir=back, arrowtail=empty];
+  Animal -> Gato [dir=back, arrowtail=empty];
+  Animal -> EstadoAnimal [style=dashed, arrowhead=vee, label="usa"];
+
+  // ---------- Procesos ----------
+  Refugio [label="{Refugio|- nombre: String\l- direccion: String\l- capacidad: int\l|+ cupoDisponible(): int\l}"];
+  Rescate [label="{Rescate|- id: int\l- fecha: Date\l- ubicacion: String\l- condicion: String\l- descripcion: String\l|+ registrar(): void\l}"];
+  FichaMedica [label="{FichaMedica|- id: int\l- diagnostico: String\l- pesoKg: double\l- esterilizado: boolean\l- vacunasAlDia: boolean\l|+ agregarTratamiento(t: Tratamiento)\l}"];
+  Tratamiento [label="{Tratamiento|- id: int\l- tipo: String\l- fecha: Date\l- medicamento: String\l- descripcion: String\l}"];
+  SolicitudAdopcion [label="{SolicitudAdopcion|- id: int\l- fecha: Date\l- motivo: String\l- estado: EstadoSolicitud\l|+ aprobar(): void\l+ rechazar(motivo: String): void\l}"];
+  Adopcion [label="{Adopcion|- id: int\l- fechaAdopcion: Date\l- contratoUrl: String\l|+ formalizar(): void\l}"];
+  Seguimiento [label="{Seguimiento|- id: int\l- fecha: Date\l- observaciones: String\l- resultado: String\l}"];
+
+  // composición / agregación / asociaciones
+  Refugio -> Animal [dir=both, arrowtail=odiamond, arrowhead=none, taillabel="1", headlabel="0..*"];
+  Rescate -> Animal [arrowhead=none, taillabel="1", headlabel="1..*", label="origina"];
+  Rescatista -> Rescate [arrowhead=none, taillabel="1", headlabel="0..*", label="realiza"];
+  Animal -> FichaMedica [dir=both, arrowtail=diamond, arrowhead=none, taillabel="1", headlabel="1"];
+  FichaMedica -> Tratamiento [dir=both, arrowtail=diamond, arrowhead=none, taillabel="1", headlabel="0..*"];
+  Veterinario -> Tratamiento [arrowhead=none, taillabel="1", headlabel="0..*", label="aplica"];
+  Adoptante -> SolicitudAdopcion [arrowhead=none, taillabel="1", headlabel="0..*", label="presenta"];
+  SolicitudAdopcion -> Animal [arrowhead=none, taillabel="0..*", headlabel="1", label="sobre"];
+  SolicitudAdopcion -> Adopcion [arrowhead=none, taillabel="1", headlabel="0..1", label="genera"];
+  Adopcion -> Seguimiento [dir=both, arrowtail=diamond, arrowhead=none, taillabel="1", headlabel="0..*"];
+  Voluntario -> Seguimiento [arrowhead=none, taillabel="1", headlabel="0..*", label="registra"];
+}
